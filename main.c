@@ -1,36 +1,22 @@
 #include "mlx_linux/mlx.h"
+#include "libft/libft.h"
+#include "get_next_line/get_next_line.h"
 
 //int check_extention
 
-int	ft_putchar(char c)
+int main(void)
 {
-	return (write(1, &c, 1));
-}
-
-int	ft_putstr(char *str)
-{
-	int	counter;
-
-	counter = 0;
-	if (!str)
-		return (write(1, "(null)", 6));
-	
-    while (*str)
-	{
-		if (ft_putchar(*str) == -1)
-			return (-1);
-		str++;
-		counter++;
-	}
-	return (counter);
-}
-
-int main (int argc, char **argv) {
-
-
-    
-    
-    
-    
+    int     fd;
+    char    *result;
+    fd = open("tst.txt", O_RDONLY);
+    result = get_next_line(fd);
+    //printf("Result is %s\n", result);
+    while (result)	
+    {
+        printf("RESULT--->>>%s", result);
+        free(result);
+        result = get_next_line(fd);
+    }
+    free(result);
     return (0);
 }
