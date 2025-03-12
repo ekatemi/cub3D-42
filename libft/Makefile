@@ -22,11 +22,8 @@ SOURCES = ft_isalpha.c  ft_isdigit.c ft_isalnum.c ft_isprint.c ft_isascii.c \
 		  ft_putnbr_fd.c ft_putendl_fd.c ft_substr.c ft_strjoin.c ft_strtrim.c \
 		  ft_itoa.c ft_strmapi.c ft_striteri.c ft_split.c ft_strcmp.c
 
-SOURCESBONUS = ft_lstnew.c ft_lstadd_front.c
-
 
 OBJECTS = $(SOURCES:.c=.o)
-OBJECTSBONUS = $(SOURCESBONUS:.c=.o)
 
 COMPILER = gcc
 
@@ -37,19 +34,15 @@ CFLAGS = -Wall -Wextra -Werror
 	$(COMPILER) $(CFLAGS) -c $< -o $@
 
 
-
 # Mis metodos
 all: 	$(NAME)
 
 $(NAME): $(OBJECTS) 
 	ar -rcs $(NAME) $(OBJECTS)
 
-bonus: $(OBJECTS) $(OBJECTSBONUS)
-	ar -rcs $(NAME) $(OBJECTS) $(OBJECTSBONUS)
-	touch bonus
 
 clean:
-	rm -f $(OBJECTS) $(OBJECTSBONUS)
+	rm -f $(OBJECTS)
 
 fclean: clean
 	rm -f $(NAME)
