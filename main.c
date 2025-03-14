@@ -18,13 +18,6 @@ int is_empty_or_whitespace(char *str)
 }
 
 
-typedef struct {
-    char *pathNorth;  // Path to the texture file
-    char *pathSouth;
-    char *pathWest;
-    char *pathEast;
-} textures;
-
 //int fillMatrix
 
 int main(int argc, char **argv)
@@ -44,7 +37,7 @@ int main(int argc, char **argv)
         return (1);  // Return a non-zero value to indicate an error
     }
     result = get_next_line(fd); //if result is empty line skip to next
-    printf("Result is %s\n", result);
+    //printf("Result is %s\n", result);
     while (result)	
     {
         if (is_empty_or_whitespace(result))

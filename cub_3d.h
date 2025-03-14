@@ -23,12 +23,31 @@
 #  define BUFFER_SIZE 42
 # endif
 
+//** STRUCTS */
+typedef struct s_textures {
+    char *NO;  // Path to the texture file
+    char *SO;
+    char *WE;
+    char *EA;
+} t_textures;
+
+typedef struct s_color{
+    char location;  // Floor or Ceiling
+    int r;
+    int g;
+    int b;
+} t_color;
+
+
+
+//**FOR GET NEXT LINE */
 char	*get_free(char **str1);
 char	*extract_line(char *buffer);
 char	*update_storage(char *buffer);
 char	*read_from_file(int fd, char *persistent_buffer);
 char	*get_next_line(int fd);
 
+//** PARSING */
 char* getFilename(int arg, char **argv);
 
 #endif
