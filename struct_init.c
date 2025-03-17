@@ -1,21 +1,25 @@
 #include "cub_3d.h"
 
-void texturesInit(t_textures *t)
-{
-    if (!t)
-        return;
-    t->EA = NULL;
-    t->NO = NULL;
-    t->SO = NULL;
-    t->WE = NULL;
-}
 
-void colorInit(t_color *c)
+void inputDataInit(t_data *data)
 {
-    if (!c)
+    if (!data)
         return;
-    c->location = NULL;
-    c->r = 0;
-    c->g = 0;
-    c->b = 0;
+    data->NO = NULL;// Path to the texture file
+    data->SO = NULL;
+    data->WE = NULL;
+    data->EA = NULL;
+
+    data->floor.r = -1; //0 to 255
+    data->floor.g = -1;
+    data->floor.b = -1;
+
+    data->ceiling.r = -1;
+    data->ceiling.g = -1;
+    data->ceiling.b = -1;
+
+    data->map = (char**)malloc(sizeof(char*) * (50 + 1));
+    if (!data->map)
+        return;
+    data->map[0] = 0; //init space for 50 lines
 }

@@ -24,19 +24,23 @@
 # endif
 
 //** STRUCTS */
-typedef struct s_textures {
-    char *NO;  // Path to the texture file
-    char *SO;
-    char *WE;
-    char *EA;
-} t_textures;
-
-typedef struct s_color{
-    char location;  // Floor or Ceiling
+typedef struct s_location{
     int r;
     int g;
     int b;
-} t_color;
+} t_location;
+
+typedef struct s_data {
+    char *NO;  // ./path_to_the_north_texture
+    char *SO;
+    char *WE;
+    char *EA;
+
+    t_location floor;
+    t_location ceiling;
+    
+    char **map;
+} t_data;
 
 
 
@@ -51,5 +55,8 @@ char	*get_next_line(int fd);
 char* getFilename(int arg, char **argv);
 int errOpen(char *file);
 int is_empty_or_whitespace(char *str);
+
+//** STRUCT INIT */
+void inputDataInit(t_data *data);
 
 #endif
