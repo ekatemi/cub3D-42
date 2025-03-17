@@ -49,5 +49,7 @@ char	*get_next_line(int fd);
 
 //** PARSING */
 char* getFilename(int arg, char **argv);
+int errOpen(char *file);
+int is_empty_or_whitespace(char *str);
 
 #endif

@@ -1,5 +1,6 @@
 #include "libft/libft.h"
 #include <stdio.h>
+#include "cub_3d.h"
 
 //int check_extention 1 ok, 0 not ok
 int checkExtention(char *str)
@@ -28,4 +29,33 @@ char* getFilename(int arg, char **argv)
         return NULL;
     }
     return (str);
+}
+
+//helper parse input
+int is_empty_or_whitespace(char *str)
+{
+    if (str == NULL)
+        return (1);
+    
+    while (*str)
+    {
+        if (*str != ' ' && *str != '\f' && *str != '\r' && *str != '\t'
+            && *str != '\v' && *str != '\n') // Check for non-whitespace characters
+            return (0);
+        str++;
+    }
+    return (1); //all whitespace
+}
+
+//check if path is valid and return valid fd or -1
+int checkPath(char *str)
+{
+    int fd;
+
+    fd = -1;
+    if (*str == '.' && *(str + 1) == '/' )
+    {
+        fd = errOpen(str);
+    }
+    return fd;
 }
