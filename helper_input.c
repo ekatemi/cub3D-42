@@ -63,3 +63,54 @@ int is_empty_or_whitespace(char *str)
     }
     return (1); //all whitespace
 }
+
+char	**ft_split_global(const char *s, char c)
+{
+	char			**arr_of_words;
+	const char		*separator;
+	size_t			size_word;
+	size_t			len;
+    
+	if (!s)
+        return (NULL);
+
+	arr_of_words = malloc(3 * sizeof(char *));
+	if (!arr_of_words)
+		return (NULL);
+
+	separator = ft_strchr(s, c);
+	if (!separator)
+		return (free(arr_of_words), NULL);
+
+	size_word = separator - s;
+	arr_of_words[0] = ft_substr(s, 0, size_word);
+	if (!arr_of_words[0])
+    {
+        free(arr_of_words);
+        return (NULL);
+    }
+
+	separator++; // Move past delimiter
+
+	// Skip leading spaces
+	while (*separator == ' ')
+		separator++;
+
+    // Find length excluding trailing spaces
+    len = ft_strlen(separator);
+
+	while (len > 0 && separator[len -1] == ' ')
+		len--;
+
+
+    arr_of_words[1] = ft_substr(separator, 0, len);
+	if (!arr_of_words[1])
+    {
+        free(arr_of_words[0]);
+        free(arr_of_words);
+        return (NULL);
+    }
+
+	arr_of_words[2] = NULL;
+	return (arr_of_words);
+}

@@ -58,6 +58,7 @@ char* getFilename(int arg, char **argv);
 int errOpen(char *file);
 int is_empty_or_whitespace(char *str);
 int	ft_isspace(char c);
+char	**ft_split_global(const char *s, char c);
 
 //** STRUCT INIT */
 void inputDataInit(t_data *data);

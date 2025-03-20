@@ -42,7 +42,7 @@ void printInput(t_data data)
     printf("SO %s \n", data.SO);
     printf("WE %s \n", data.WE);
     printf("EA %s \n", data.EA);
-    printf("EA %c \n", data.filled);
+    printf("Filled %d \n", data.filled);
     printf("Floor %d, %d, %d \n", data.F.r,data.F.g, data.F.b);
     printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
 }
@@ -162,104 +162,196 @@ int fillColor(t_location *l, char *str)
     return (1); // Ok
 }
 
-int extractColor(char *str, t_data *data)
-{
-    if (!str || !data)
-        return (0);
-    int i = 0;
+// int extractColor(char *str, t_data *data)
+// {
+//     if (!str || !data)
+//         return (0);
+//     int i = 0;
     
-    while (ft_isspace(str[i])) //skip spaces at the beginning
-    {
-        i++;
-    }
+//     while (ft_isspace(str[i])) //skip spaces at the beginning
+//     {
+//         i++;
+//     }
 
-    if (ft_strncmp(&str[i], "F", 1) == 0 && )
-    {
-        if (data->F.r != -1)
-        {
-            printf("Error: duplicated identifier F\n");
-            return (-1);
-        }
-        fillColor(&data->F, str[i]);
-    }   
-    else if (ft_strncmp(&str[i], "C", 1) == 0)
-    {
-        if (data->C.r != -1)
-        {
-            printf("Error: duplicated identifier C\n");
-            return (-1);
-        }
-        fillColor(&data->C, str[i]);
-    }
-    else
+//     if (ft_strncmp(&str[i], "F", 1) == 0 && )
+//     {
+//         if (data->F.r != -1)
+//         {
+//             printf("Error: duplicated identifier F\n");
+//             return (-1);
+//         }
+//         fillColor(&data->F, str[i]);
+//     }   
+//     else if (ft_strncmp(&str[i], "C", 1) == 0)
+//     {
+//         if (data->C.r != -1)
+//         {
+//             printf("Error: duplicated identifier C\n");
+//             return (-1);
+//         }
+//         fillColor(&data->C, str[i]);
+//     }
+//     else
    
-    //no valid identifier found
-    if (!loc_target || ( str[i + 1] != ' ' && str[i + 1] != '\0'))
-        return (0);
-    i += 1;
+//     //no valid identifier found
+//     if (!loc_target || ( str[i + 1] != ' ' && str[i + 1] != '\0'))
+//         return (0);
+//     i += 1;
     
-    while (ft_isspace(str[i]))
-        i++;
+//     while (ft_isspace(str[i]))
+//         i++;
 
-    if (loc_target != NULL)//duplicated
-    {
-        printf("Error: duplicated identifier %s\n", identifier);
-        return (-1);
-    }
+//     if (loc_target != NULL)//duplicated
+//     {
+//         printf("Error: duplicated identifier %s\n", identifier);
+//         return (-1);
+//     }
 
-    loc_target = ft_strdup(&str[i]);
+//     loc_target = ft_strdup(&str[i]);
 
-    return (1);
-}
+//     return (1);
+// }
 
-//which id do we have
-int checkID(char *str, t_data *data)
+//check id and if it is 0, then input is not correct
+
+
+int parseInput(char *str, t_data *data)
 {
-    if (!str)
-        return(0);
-
-    while(*str == ' ')
-        str++;
-    if ((str, "NO", 2))
-        return 1;
-    else if (!ft_strncmp(str, "SO", 2))
-        return 2;
-    else if (!ft_strncmp(str, "WE", 2))
-        return 3;
-    else if (!ft_strncmp(str, "EA", 2))
-        return 4;
-    else if (*str == 'F')
-        return 5;
-    else if (*str == 'C')
-        return 6;
-    return (0);
-}
-
-
-int parseInput(char *str)
-{
-   
+    
     int i = 0;
-    
-    int start = 0; //
-    int end = 0;
 
-    char *identifyer = NULL;
+    char **arr;
 
     if (!str || ft_strlen(str) < 2)
         return (0); //err
     
-    // while(ft_isspace(str[i]))
-    //     i++;
+    //skip leading whitespaces
+    while(ft_isspace(str[i]))
+        i++;
     
-    
-    if (!arr)
-        return (0); //err allocation
-    
+    if(str[i] != '1') //not a map
+    {
+        arr =ft_split_global(&str[i], ' '); //divide on first space found,[0][1][2]
+        if (!arr)
+        {
+            printf("Error: Input too short\n");
+            return (0);//err allocation or identifyer
+        }
+             
+        //printf("ID is %s, value is %s", arr[0], arr[1]);
+        if (!ft_strcmp(arr[0],"NO"))
+        {
+            if(data->NO != NULL)
+            {
+                printf("Error: Duplicated identifyer NO\n");
+                free_matrix(arr, 2);
+                return (-1); //input err
+            }
+            else 
+            {
+                data->NO = ft_strdup(arr[1]);
+                if (!data->NO)
+                {
+                    free_matrix(arr, 2);
+                    return (0);//alloc err
+                }
+                data->filled +=1;
+            }
+            
+                
+        }
+        else if (!ft_strcmp(arr[0],"SO"))
+        {
+            if(data->SO != NULL)
+            {
+                free_matrix(arr, 2);
+                printf("Error: Duplicated identifyer SO\n");
+                return (-1); //input err
+            }
+            data->SO = ft_strdup(arr[1]);
+            if (!data->SO)
+            {
+                free_matrix(arr, 2);
+                return (0);//alloc err
+            }
+            data->filled +=1;   
+        }
+        else if (!ft_strcmp(arr[0],"WE"))
+        {
+            if(data->WE != NULL)
+            {
+                return (-1); //input err
+                free_matrix(arr, 2);
+                printf("Error: Duplicated identifyer WE\n");
+            }
+            data->WE = ft_strdup(arr[1]);
+            if (!data->WE)
+            {
+                free_matrix(arr, 2);
+                return (0);//alloc err
+            }
+            data->filled +=1;   
+        }
+        else if (!ft_strcmp(arr[0],"EA"))
+        {
+            if(data->EA != NULL)
+            {
+                printf("Error: Duplicated identifyer EA\n");
+                free_matrix(arr, 2);
+                return (-1); //input err
+            }
+            data->EA = ft_strdup(arr[1]);
+            if (!data->EA)
+            {
+                free_matrix(arr, 2);
+                return (0);//alloc err
+            }
+            data->filled +=1;  
+        }
+        else if (!ft_strcmp(arr[0],"F"))
+        {
+            if(data->F.b != -1)
+            {
+                free_matrix(arr, 2);
+                printf("Error: Duplicated identifyer F\n");
+                return (-1); //input err
+            }
+            if (fillColor(&data->F, arr[1]) == 0)
+            {
+                free_matrix(arr, 2);
+                return -1;
+            }
+            data->filled +=1;   
+        }
+        else if (!ft_strcmp(arr[0],"C"))
+        {
+            if(data->C.b != -1)
+            {
+                free_matrix(arr, 2);
+                printf("Error: Duplicated identifyer C\n");
+                return (-1); //input err
+            }
+            if (fillColor(&data->C, arr[1]) == 0)
+            {
+                free_matrix(arr, 2);
+                return (-1); //input err
+            }
+            data->filled +=1;   
+        }
+        else
+        {
+            printf("Error: wrong identifier %s\n", arr[0]);
+            free_matrix(arr, 2);
+            return (-1); //input err
+        } 
+        //printf("Value is '%s'\n", data->NO);
 
-    
-    
-    
+    }
+    // else
+    //     printf("it is a map %s\n", str); //handle map here
+
+    return 1;
+
 }
 
 
@@ -269,7 +361,7 @@ int main(int argc, char **argv)
     t_data data;
 
     inputDataInit(&data);
-    printInput(data); //just to check
+    //printInput(data); //just to check
 
     char *file = getFilename(argc, argv);
     if (!file)
@@ -289,27 +381,12 @@ int main(int argc, char **argv)
     //printf("Result is %s\n", result);
     while (result)	
     {
-        // if (is_empty_or_whitespace(result))
-        // {
-        //     free(result);
-        //     result = get_next_line(fd);  // Continue to the next line
-        //     continue;
-        // }
-        printf("RESULT--->>>%s", result);
-        /*if not empty:
-            define first chars (NO SO WE EA F C)
-            skip spaces
-            also check duplicated coordinates(if (!struct.NO) NO = "path" else err dupl)
-            check the structure: path to file / r,g,b from 0 to 255
-            fill structs
-            if line is only 111111 it is start of the map
-            /flag inside map = 1
-            if flag inside map and empty line == error
-            if line is 111111 and next lines are empty or eof is end of map
-        */
+        if (parseInput(result, &data) <= 0) //what returns parse input??
+            return (1);
         free(result);
         result = get_next_line(fd);
     }
+    printInput(data);
     free(result);
     close(fd);
     return (0);
