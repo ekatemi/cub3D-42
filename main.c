@@ -2,78 +2,103 @@
 #include "libft/libft.h"
 #include "cub_3d.h"
 
-// int is_empty_or_whitespace(char *str)
-// {
-//     if (str == NULL)
-//         return (1);
-    
-//     while (*str)
-//     {
-//         if (*str != ' ' && *str != '\f' && *str != '\r' && *str != '\t'
-//             && *str != '\v' && *str != '\n') // Check for non-whitespace characters
-//             return (0);
-//         str++;
-//     }
-//     return (1); //all whitespace
-// }
 
+char	*ft_strndup(const char *s1, int n)
+{
+	int			i;
+	char			*copy;
 
-//int fillMatrix
+	i = 0;
+	copy = (char *)malloc(sizeof(char) * (n + 1)); // Allocate memory for n characters + null-terminator
+	if (copy == NULL)
+		return (NULL);
+	while (i < n && s1[i] != '\0') // Copy up to n characters or stop at the null-terminator
+	{
+		copy[i] = s1[i];
+		i++;
+	}
+	copy[i] = '\0'; // Ensure null-termination
+	return (copy);
+}
+//free 2D array
+char	**free_matrix(char **arr_of_words, int col)
+{
+	int	i;
 
+	i = 0;
+	while (i < col && arr_of_words[i])
+	{
+		free(arr_of_words[i]);
+		i++;
+	}
+	free(arr_of_words);
+	return (NULL);
+}
 
-
+//helper
 void printInput(t_data data)
 {
     printf("NO %s \n", data.NO);
     printf("SO %s \n", data.SO);
     printf("WE %s \n", data.WE);
     printf("EA %s \n", data.EA);
-    printf("Floor %d, %d, %d \n", data.floor.r,data.floor.g, data.floor.b);
-    printf("Ceiling %d, %d, %d \n", data.ceiling.r,data.ceiling.g, data.ceiling.b);
+    printf("EA %c \n", data.filled);
+    printf("Floor %d, %d, %d \n", data.F.r,data.F.g, data.F.b);
+    printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
 }
 
-// void trim_trailing_spaces(char *str)
-// {
-//     int len = ft_strlen(str);
 
-//     // Find the last non-space character
-//     while (len > 0 && (str[len - 1] == ' ' || str[len - 1] == '\t'))
-//     {
-//         str[len - 1] = '\0';  // Null-terminate the string at the last non-space character
-//         len--;
-//     }
-// }
-
-int extractPath(char *str, t_data *data)
+// find identifyer
+int extractTexture(char *str, t_data *data)
 {
     if (!str || !data)
         return (0);
     int i = 0;
     char **target = NULL;
-    char *identifier = NULL;//just for print error
+    char *identifier = "";//just for print error
 
-    while (str[i] == ' ') //skip spaces at the beginning
+    while (ft_isspace(str[i])) //skip spaces at the beginning
     {
         i++;
     }
 
     if (ft_strncmp(&str[i], "NO", 2) == 0)
     {
+       if (*target != NULL)
+       {
+            printf("Error: duplicated identifier %s\n", identifier);
+            return (-1);
+        }
        target = &data->NO;
        identifier = "NO";
     }   
     else if (ft_strncmp(&str[i], "SO", 2) == 0)
     {
+        if (*target != NULL)
+        {
+            printf("Error: duplicated identifier %s\n", identifier);
+            return (-1);
+        }
         target = &data->SO;
         identifier = "SO";
     }  
     else if (ft_strncmp(&str[i], "WE", 2) == 0)
     {
+        if (*target != NULL)
+        {
+            printf("Error: duplicated identifier %s\n", identifier);
+            return (-1);
+        }
         target = &data->WE;
         identifier = "WE";
     }
     else if (ft_strncmp(&str[i], "EA", 2) == 0)
     {
+        if (*target != NULL)
+        {
+            printf("Error: duplicated identifier %s\n", identifier);
+            return (-1);
+        }
         target = &data->EA;
         identifier = "EA";
     }
@@ -82,87 +107,162 @@ int extractPath(char *str, t_data *data)
         return (0);
     i += 2;
     
-    while (str[i] == ' ')
+    while (ft_isspace(str[i]))
         i++;
 
-    if (*target != NULL)//duplicated
+    // if (*target != NULL)//duplicated
+    // {
+    //     printf("Error: duplicated identifier %s\n", identifier);
+    //     return (-1);
+    // }
+    //strndup till last not empty space char
+    int len = ft_strlen(str);
+    while(len > 0 && ft_isspace(str[len-1]))
     {
-        printf("Error: duplicated identifier %s\n", identifier);
-        return (-1);
+        len--;
     }
 
-    *target = ft_strdup(&str[i]);
-
+    *target = ft_strndup(&str[i], len);
     return (1);
 }
 
-int parseColor(t_location *l, char *str)
+/* PARSE F and C */
+//parse string like this "255,0,4" andd assign to F or C
+int fillColor(t_location *l, char *str)
 {
-    int i = 0;
+    int i;
     char **arr;
-    int num;
-    arr = ft_split(str, ',');
+
+    i = 0;
+    arr = ft_split(str, ','); // Split string into 3 components
     if (!arr)
-        return (0); //error
-    
+        return (0); // Allocation error
 
-
+    // Count elements
     while (arr[i])
-	{
-		printf("%s\n", arr[i]);
-		num = ft_atoi(arr[i]);
-        if (num != -1)
-            l->r = num;
-        free(arr[i]);
-		i++;
-	}
-    if (arr[i] != '\0')
-///add error handling, more than 3 
-	free(arr);  
+        i++;
+    
+    if (i != 3) {
+        printf("Error:\n 3 parameters [R,G,B]\n");
+        free_matrix(arr, 3);
+        return (0); //err
+    }
+
+    // Convert strings to numbers
+    l->r = ft_atoi(arr[0]);
+    l->g = ft_atoi(arr[1]);
+    l->b = ft_atoi(arr[2]);
+
+    if (l->r == -1 || l->g == -1 || l->b == -1) {
+        printf("Error: Invalid RGB value (must be 0-255 and only digits)\n");
+        free_matrix(arr, 3);
+        return (0); //err
+    }
+    free_matrix(arr, 3);
+    return (1); // Ok
 }
 
-int extractTexture(char *str, t_data *data)
+int extractColor(char *str, t_data *data)
 {
     if (!str || !data)
         return (0);
     int i = 0;
-    char **target = NULL;
-    char identifier = NULL;//just for print error
-
-    while (str[i] == ' ') //skip spaces at the beginning
+    
+    while (ft_isspace(str[i])) //skip spaces at the beginning
     {
         i++;
     }
 
-    if (ft_strncmp(&str[i], "F", 1) == 0)
+    if (ft_strncmp(&str[i], "F", 1) == 0 && )
     {
-       target = &data->floor;
-       identifier = 'F';
+        if (data->F.r != -1)
+        {
+            printf("Error: duplicated identifier F\n");
+            return (-1);
+        }
+        fillColor(&data->F, str[i]);
     }   
     else if (ft_strncmp(&str[i], "C", 1) == 0)
     {
-        target = &data->ceiling;
-        identifier = 'C';
-    }  
+        if (data->C.r != -1)
+        {
+            printf("Error: duplicated identifier C\n");
+            return (-1);
+        }
+        fillColor(&data->C, str[i]);
+    }
+    else
    
-    //no valid identifier for path found
-    if (!target || ( str[i + 1] != ' ' && str[i + 1] != '\0'))
+    //no valid identifier found
+    if (!loc_target || ( str[i + 1] != ' ' && str[i + 1] != '\0'))
         return (0);
     i += 1;
     
-    while (str[i] == ' ')
+    while (ft_isspace(str[i]))
         i++;
 
-    if (*target != NULL)//duplicated
+    if (loc_target != NULL)//duplicated
     {
         printf("Error: duplicated identifier %s\n", identifier);
         return (-1);
     }
 
-    *target = ft_strdup(&str[i]);
+    loc_target = ft_strdup(&str[i]);
 
     return (1);
 }
+
+//which id do we have
+int checkID(char *str, t_data *data)
+{
+    if (!str)
+        return(0);
+
+    while(*str == ' ')
+        str++;
+    if ((str, "NO", 2))
+        return 1;
+    else if (!ft_strncmp(str, "SO", 2))
+        return 2;
+    else if (!ft_strncmp(str, "WE", 2))
+        return 3;
+    else if (!ft_strncmp(str, "EA", 2))
+        return 4;
+    else if (*str == 'F')
+        return 5;
+    else if (*str == 'C')
+        return 6;
+    return (0);
+}
+
+
+int parseInput(char *str)
+{
+   
+    int i = 0;
+    
+    int start = 0; //
+    int end = 0;
+
+    char *identifyer = NULL;
+
+    if (!str || ft_strlen(str) < 2)
+        return (0); //err
+    
+    // while(ft_isspace(str[i]))
+    //     i++;
+    
+    
+    if (!arr)
+        return (0); //err allocation
+    
+
+    
+    
+    
+}
+
+
 
 int main(int argc, char **argv)
 {

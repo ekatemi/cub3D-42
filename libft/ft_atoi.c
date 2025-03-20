@@ -19,33 +19,46 @@ static int	ft_isspace(char c)
 	return (c == '\t' || c == '\n' || c == '\v' || c == '\f'
 		|| c == '\r' || c == ' ');
 }
-//special atoi
+//special atoi no negativa and range (Check later)
 int	ft_atoi(const char *nptr)
 {
-	int	res;
+	int	res = 0;
 
-	res = 0;
-	
+	// Skip leading spaces
 	while (*nptr && ft_isspace(*nptr))
 		nptr++;
-
-	while (*nptr)
+	// Immediately return error if '-' is found
+	if (*nptr == '-')
 	{
-		if (*nptr < '0' || *nptr > '9')
-		{
-			printf("Error: Only integers and no spaces\n");
-			return (-1);
-		}
-			
+		printf("Error: Negative numbers are not allowed\n");
+		return (-1);
+	}
+	// Handle optional '+', but do nothing
+	if (*nptr == '+')
+		nptr++;
+	// If first character is not a digit, return error
+	if (*nptr < '0' || *nptr > '9')
+	{
+		printf("Error: Invalid input\n");
+		return (-1);
+	}
+	// Convert number
+	while (*nptr >= '0' && *nptr <= '9')
+	{
 		res = res * 10 + (*nptr - '0');
 		nptr++;
 	}
-	if (res < 0 || res > 255)
+	// If extra invalid characters appear at the end, return error
+	if (*nptr != '\0' && !ft_isspace(*nptr))
 	{
-		printf("Error: Range should be [0,255]\n");
+		printf("Error: Invalid trailing characters\n");
 		return (-1);
 	}
-		
+	if (res > 255)
+	{
+		printf("Error: Number out of range (0-255)\n");
+		return (-1);
+	}
 	return (res);
 }
 
@@ -75,8 +88,8 @@ int	ft_atoi(const char *nptr)
 
 // int main(void)
 // {
-// 	printf("Original atoi %d\n", ft_atoi("255 "));
-// 	printf("My atoi %d\n", ft_atoi("   -ass2"));
-// 	printf("My atoi %d\n", ft_atoi("    2s"));
+// 	printf("My atoi %d\n", ft_atoi("  0 "));
+// 	printf("My atoi %d\n", ft_atoi("   -ass2 "));
+// 	printf("My atoi %d\n", ft_atoi("    2s "));
 // 	return 0;
 // }

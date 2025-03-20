@@ -10,13 +10,15 @@ void inputDataInit(t_data *data)
     data->WE = NULL;
     data->EA = NULL;
 
-    data->floor.r = -1; //0 to 255
-    data->floor.g = -1;
-    data->floor.b = -1;
+    data->F.r = -1; //0 to 255
+    data->F.g = -1;
+    data->F.b = -1;
 
-    data->ceiling.r = -1;
-    data->ceiling.g = -1;
-    data->ceiling.b = -1;
+    data->C.r = -1;
+    data->C.g = -1;
+    data->C.b = -1;
+
+    data->filled = 0;
 
     data->map = (char**)malloc(sizeof(char*) * (50 + 1));
     if (!data->map)

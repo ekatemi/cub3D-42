@@ -36,8 +36,10 @@ typedef struct s_data {
     char *WE;
     char *EA;
 
-    t_location floor;
-    t_location ceiling;
+    t_location F;
+    t_location C;
+
+    int filled; // 6 filled all data exept map, map goes last
     
     char **map;
 } t_data;
@@ -55,6 +57,7 @@ char	*get_next_line(int fd);
 char* getFilename(int arg, char **argv);
 int errOpen(char *file);
 int is_empty_or_whitespace(char *str);
+int	ft_isspace(char c);
 
 //** STRUCT INIT */
 void inputDataInit(t_data *data);

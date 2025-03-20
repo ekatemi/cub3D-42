@@ -31,22 +31,6 @@ char* getFilename(int arg, char **argv)
     return (str);
 }
 
-//helper parse input
-int is_empty_or_whitespace(char *str)
-{
-    if (str == NULL)
-        return (1);
-    
-    while (*str)
-    {
-        if (*str != ' ' && *str != '\f' && *str != '\r' && *str != '\t'
-            && *str != '\v' && *str != '\n') // Check for non-whitespace characters
-            return (0);
-        str++;
-    }
-    return (1); //all whitespace
-}
-
 //check if path is valid and return valid fd or -1
 int checkPath(char *str)
 {
@@ -58,4 +42,24 @@ int checkPath(char *str)
         fd = errOpen(str);
     }
     return fd;
+}
+
+int	ft_isspace(char c)
+{
+	return (c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r' || c == ' ');
+}
+
+int is_empty_or_whitespace(char *str)
+{
+    if (str == NULL)
+        return (1);
+    
+    while (*str)
+    {
+        if (!ft_isspace(*str)) // Check for non-whitespace characters
+            return (0);
+        str++;
+    }
+    return (1); //all whitespace
 }
