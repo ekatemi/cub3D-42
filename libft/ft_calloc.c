@@ -22,15 +22,16 @@ memory is filled with bytes of value zero.*/
 void	*ft_calloc(size_t count, size_t size)
 {
 	char	*ptr;
-
-	ptr = (char *)malloc(count * size);
+    
 	if (count == 0 || size == 0)
 	{
 		count = 1;
 		size = 1;
 	}
-	if (ptr)
-		ft_bzero (ptr, count * size);
+    ptr = (char *)malloc(count * size);
+    if (!ptr)
+        return (NULL);
+	ft_bzero (ptr, count * size);
 	return (ptr);
 }
 /*

@@ -20,7 +20,7 @@
 # include <errno.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 1024
 # endif
 
 //** STRUCTS */
@@ -47,10 +47,6 @@ typedef struct s_data {
 
 
 //**FOR GET NEXT LINE */
-char	*get_free(char **str1);
-char	*extract_line(char *buffer);
-char	*update_storage(char *buffer);
-char	*read_from_file(int fd, char *persistent_buffer);
 char	*get_next_line(int fd);
 
 //** PARSING */
@@ -62,5 +58,6 @@ char	**ft_split_global(const char *s, char c);
 
 //** STRUCT INIT */
 void inputDataInit(t_data *data);
+void freeData(t_data *data);
 
 #endif

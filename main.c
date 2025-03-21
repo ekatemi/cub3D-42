@@ -231,7 +231,7 @@ int parseInput(char *str, t_data *data)
     
     if(str[i] != '1') //not a map
     {
-        arr =ft_split_global(&str[i], ' '); //divide on first space found,[0][1][2]
+        arr = ft_split_global(&str[i], ' '); //divide on first space found,[0][1][2]
         if (!arr)
         {
             printf("Error: Input too short\n");
@@ -381,12 +381,14 @@ int main(int argc, char **argv)
     //printf("Result is %s\n", result);
     while (result)	
     {
+        printf("Result is %s\n", result);
         if (parseInput(result, &data) <= 0) //what returns parse input??
             return (1);
         free(result);
         result = get_next_line(fd);
     }
-    printInput(data);
+    //printInput(data);
+    freeData(&data);
     free(result);
     close(fd);
     return (0);
