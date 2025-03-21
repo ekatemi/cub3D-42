@@ -59,5 +59,6 @@ char	**ft_split_global(const char *s, char c);
 //** STRUCT INIT */
 void inputDataInit(t_data *data);
 void freeData(t_data *data);
+void free_arr(char **arr);
 
 #endif

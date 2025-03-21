@@ -1,6 +1,20 @@
 #include "libft/libft.h"
 #include <stdio.h>
 #include "cub_3d.h"
+#include <string.h>
+
+void free_arr(char **arr)
+{
+    int i = 0;
+    if (!arr)
+        return;
+    while (arr[i])
+    {
+        free(arr[i]); // Free each word
+        i++;
+    }
+    free(arr); // Free the array itself
+}
 
 //int check_extention 1 ok, 0 not ok
 int checkExtention(char *str)
@@ -83,12 +97,12 @@ char	**ft_split_global(const char *s, char c)
 		return (free(arr_of_words), NULL);
 
 	size_word = separator - s;
-	arr_of_words[0] = ft_substr(s, 0, size_word);
+	strncpy(arr_of_words[0], s, size_word);
 	if (!arr_of_words[0])
-    {
-        free(arr_of_words);
-        return (NULL);
-    }
+	{
+		free(arr_of_words);
+		return (NULL);
+	}
 
 	separator++; // Move past delimiter
 
@@ -98,18 +112,16 @@ char	**ft_split_global(const char *s, char c)
 
     // Find length excluding trailing spaces
     len = ft_strlen(separator);
-
 	while (len > 0 && separator[len -1] == ' ')
 		len--;
 
-
-    arr_of_words[1] = ft_substr(separator, 0, len);
+    strncpy(arr_of_words[1],separator, len);
 	if (!arr_of_words[1])
-    {
-        free(arr_of_words[0]);
-        free(arr_of_words);
-        return (NULL);
-    }
+	{
+		free(arr_of_words[0]);
+		free(arr_of_words);
+		return (NULL);
+	}
 
 	arr_of_words[2] = NULL;
 	return (arr_of_words);
