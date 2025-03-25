@@ -30,6 +30,15 @@ void printInput(t_data data)
     printf("Filled %d \n", data.filled);
     printf("Floor %d, %d, %d \n", data.F.r,data.F.g, data.F.b);
     printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
+    
+    printf("MAP---------->\n");
+    //printf("%s\n", data.map[0]);
+    //printf("%s\n", data.map[1]);
+    for (int i = 0; i < data.idx; i++)
+    {
+        printf("%s", data.map[i]);
+    }
+    printf("\nIDX is %d \n", data.idx);
 }
 
 
@@ -91,8 +100,8 @@ int checkIdentifier(char *str, void *target, char *id) //id "NO", "SO", "WE", "E
 {
     size_t id_len = ft_strlen(id); // Length of the identifier
 
-    while (ft_isspace(*str)) 
-        str++;
+    // while (ft_isspace(*str)) 
+    //     str++;
 
     // Print for debugging
     //printf("str[0] is %c %c \n", str[0], str[1]);
@@ -132,10 +141,7 @@ int checkIdentifier(char *str, void *target, char *id) //id "NO", "SO", "WE", "E
                 return 0;
             }
 
-            printf("Color Target: R=%d, G=%d, B=%d\n", color_target->r, color_target->g, color_target->b);
-           
-
-
+            //printf("Color Target: R=%d, G=%d, B=%d\n", color_target->r, color_target->g, color_target->b);
             // Print assigned color
             printf("Successfully assigned string %s color: \n", str);
         }
@@ -148,16 +154,50 @@ int checkIdentifier(char *str, void *target, char *id) //id "NO", "SO", "WE", "E
     return (0);  // Return 0 if the identifier doesn't match
 }
 
+int storeMap(t_data *data, char *line)
+{
+    size_t len;
+
+    if(!data || !line)
+        return(0);
+    len = ft_strlen(line);
+    data->map[data->idx] = (char *)malloc(len + 1);
+    if(!data->map[data->idx])
+        return 0; //err
+    ft_strlcpy(data->map[data->idx], line, len + 1);
+    printf("Stored line: %s\n", data->map[data->idx]);
+    data->idx +=1;
+
+    return (1);
+}
+
 int parseInput(char *str, t_data *data)
 {
     if (!str || !data)
         return (0);
+    
+    char *start = str; //for map
+
+    while (ft_isspace(*str))
+        str++;
 
     // If it's a map line, return success
-    if (str[0] == '1' && data->filled == 6)
+    if ((*str == '1' && data->filled == 6) || data->inside)//maybe 1 || 0 if map can start from 0
     {
-        //handle map
-        return (1);//????????
+        //printf("Map reached %s\n", start); //TODO check empty lines in map
+        if(!storeMap(data, start))
+        {
+            return 0;//err  
+        }
+        if(data->idx == MAP_SIZE)
+        {
+            printf("Need resize");
+            return 0;//err
+        }
+        if (!data->inside)
+            data->inside = 1; 
+        //handle map storeMap(str, data);
+        return (1);//all good
     }
        
 
@@ -225,7 +265,7 @@ int main(int argc, char **argv)
     //printf("Result is %s\n", result);
     while (line)	
     {
-        if (is_empty_or_whitespace(line)) // Skip to the next line if parseInput returns 0
+        if (is_empty_or_whitespace(line) && !data.inside) // Skip to the next line if parseInput returns 0
         {
             free(line);
             line = get_next_line(fd);

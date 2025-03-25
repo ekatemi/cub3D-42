@@ -23,6 +23,10 @@
 #  define BUFFER_SIZE 1024
 # endif
 
+# ifndef MAP_SIZE
+#define MAP_SIZE 50
+# endif
+
 //** STRUCTS */
 typedef struct s_location{
     int r;
@@ -41,6 +45,9 @@ typedef struct s_data {
 
     int filled; // 6 filled all data exept map, map goes last
     
+    int inside;
+    int idx;
+
     char **map;
 } t_data;
 

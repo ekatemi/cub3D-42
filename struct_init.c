@@ -3,6 +3,9 @@
 
 void inputDataInit(t_data *data)
 {
+    int i;
+
+    i = 0;
     if (!data)
         return;
     data->NO = NULL;// Path to the texture file
@@ -19,23 +22,30 @@ void inputDataInit(t_data *data)
     data->C.b = -1;
 
     data->filled = 0;
+    data->idx = 0;
+    data->inside = 0;
 
-    data->map = NULL;
 
-    // data->map = (char**)malloc(sizeof(char*) * (50 + 1));
-    // if (!data->map)
-    //     return;
-    // int i = 0;
-    // while (i < 51)
-    // {
-    //     data->map[i] = NULL;
-    // }
+    data->map = (char**)malloc(sizeof(char*) * (MAP_SIZE));
+    if (!data->map)
+    {
+        data->map = NULL;
+        return;
+    }
+        
+    // Initialize all rows to NULL
+    while(i < MAP_SIZE)
+    {
+        data->map[i] = NULL;
+        i++;
+    }  
 }
 
 void freeData(t_data *data)
 {
-    //int i;
+    int i;
 
+    i = 0;
     if (!data)
         return;
 
@@ -45,18 +55,14 @@ void freeData(t_data *data)
     free(data->WE);
     free(data->EA);
 
-    // // Free the map
-    // if (data->map)
-    // {
-    //     i = 0;
-    //     while (i < 50)
-    //     {
-    //         if (data->map)
-    //         free(data->map[i]);
-    //         data->map[i] = NULL;
-    //         i++;
-    //     }
-    //     free(data->map);
-    //     data->map = NULL;
-    // }
+    // Free the map
+    while (i < MAP_SIZE)
+    {
+        free(data->map[i]);
+        data->map[i] = NULL;
+        i++;
+    }
+    free(data->map);
+    data->map = NULL;
+        
 }
