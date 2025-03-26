@@ -160,6 +160,12 @@ int storeMap(t_data *data, char *line)
 
     if(!data || !line)
         return(0);
+    if(is_empty_or_whitespace(line))
+    {
+       printf("Error: empty line in map\n");
+       return 0; 
+    }
+        
     len = ft_strlen(line);
     data->map[data->idx] = (char *)malloc(len + 1);
     if(!data->map[data->idx])
@@ -187,6 +193,7 @@ int parseInput(char *str, t_data *data)
         //printf("Map reached %s\n", start); //TODO check empty lines in map
         if(!storeMap(data, start))
         {
+            freeData(data);
             return 0;//err  
         }
         if(data->idx == MAP_SIZE)
