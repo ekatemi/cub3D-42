@@ -154,17 +154,13 @@ int checkIdentifier(char *str, void *target, char *id) //id "NO", "SO", "WE", "E
     return (0);  // Return 0 if the identifier doesn't match
 }
 
-int storeMap(t_data *data, char *line)
+int storeRawMap(t_data *data, char *line)
 {
     size_t len;
 
-    if(!data || !line)
+    if(!data || !line || !data->inside)
         return(0);
-    if(is_empty_or_whitespace(line))
-    {
-       printf("Error: empty line in map\n");
-       return 0; 
-    }
+
         
     len = ft_strlen(line);
     data->map[data->idx] = (char *)malloc(len + 1);
@@ -172,7 +168,9 @@ int storeMap(t_data *data, char *line)
         return 0; //err
     ft_strlcpy(data->map[data->idx], line, len + 1);
     printf("Stored line: %s\n", data->map[data->idx]);
-    data->idx +=1;
+    data->idx ++;
+    if (!data->inside)
+        data->inside = 1;
 
     return (1);
 }
@@ -187,23 +185,14 @@ int parseInput(char *str, t_data *data)
     while (ft_isspace(*str))
         str++;
 
-    // If it's a map line, return success
-    if ((*str == '1' && data->filled == 6) || data->inside)//maybe 1 || 0 if map can start from 0
+    // If it is a beginning of a map put flag
+    if ((*str == '1' && data->filled == 6) )//maybe 1 || 0 if map can start from 0
     {
-        //printf("Map reached %s\n", start); //TODO check empty lines in map
-        if(!storeMap(data, start))
-        {
-            freeData(data);
-            return 0;//err  
-        }
-        if(data->idx == MAP_SIZE)
-        {
-            printf("Need resize");
-            return 0;//err
-        }
-        if (!data->inside)
-            data->inside = 1; 
-        //handle map storeMap(str, data);
+        data->inside = 1;
+    }
+
+    if(storeRawMap(data, start))
+    {
         return (1);//all good
     }
        
