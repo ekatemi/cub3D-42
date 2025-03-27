@@ -68,4 +68,7 @@ void inputDataInit(t_data *data);
 void freeData(t_data *data);
 void free_arr(char **arr);
 
+//* MAP HANDLING
+int mapIsValid(const t_data data);
+
 #endif

@@ -19,14 +19,22 @@ char	**free_matrix(char **arr_of_words, int col)
 	return (NULL);
 }
 
+char *trim_trailing_spaces(const char *str)
+{
+    int len = ft_strlen(str);
+    while (len > 0 && ft_isspace(str[len - 1])) // Move backward to remove spaces
+        len--;
+    return (ft_substr(str, 0, len)); // Extract trimmed substring
+}
+
 //helper
 void printInput(t_data data)
 {
     printf("PRINT DATA IN FILLED STRUCT\n");
-    printf("NO %s \n", data.NO);
-    printf("SO %s \n", data.SO);
-    printf("WE %s \n", data.WE);
-    printf("EA %s \n", data.EA);
+    printf("NO '%s'\n", data.NO);
+    printf("SO '%s'\n", data.SO);
+    printf("WE '%s'\n", data.WE);
+    printf("EA '%s'\n", data.EA);
     printf("Filled %d \n", data.filled);
     printf("Floor %d, %d, %d \n", data.F.r,data.F.g, data.F.b);
     printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
@@ -100,12 +108,6 @@ int checkIdentifier(char *str, void *target, char *id) //id "NO", "SO", "WE", "E
 {
     size_t id_len = ft_strlen(id); // Length of the identifier
 
-    // while (ft_isspace(*str)) 
-    //     str++;
-
-    // Print for debugging
-    //printf("str[0] is %c %c \n", str[0], str[1]);
-
     // Check if the identifier matches
     if (ft_strncmp(str, id, id_len) == 0 && ft_isspace(*(str + id_len)))
     {
@@ -125,7 +127,7 @@ int checkIdentifier(char *str, void *target, char *id) //id "NO", "SO", "WE", "E
         // Handle texture identifiers (NO, SO, WE, EA)
         if (id[0] != 'C' && id[0] != 'F') {
             char **path_target = (char **)target;
-            *path_target = ft_strdup(str);  // Assign the path to the target
+            *path_target = trim_trailing_spaces(str);
             if (!*path_target) 
                 return (0);  // Allocation error
             printf("Successfully assigned %s: [%s]\n", id, *path_target);
@@ -136,21 +138,14 @@ int checkIdentifier(char *str, void *target, char *id) //id "NO", "SO", "WE", "E
 
             // Now you can access the fields of the t_location structure    
             if (!fillColor(color_target, str, *id))
-            {
-                
+            {   
                 return 0;
             }
-
-            //printf("Color Target: R=%d, G=%d, B=%d\n", color_target->r, color_target->g, color_target->b);
-            // Print assigned color
             printf("Successfully assigned string %s color: \n", str);
         }
 
         return (1);  // Return success
     }
-
-    // No match found
-    printf("failed to match (check)\n");
     return (0);  // Return 0 if the identifier doesn't match
 }
 
@@ -160,8 +155,6 @@ int storeRawMap(t_data *data, char *line)
 
     if(!data || !line || !data->inside)
         return(0);
-
-        
     len = ft_strlen(line);
     data->map[data->idx] = (char *)malloc(len + 1);
     if(!data->map[data->idx])
@@ -195,8 +188,6 @@ int parseInput(char *str, t_data *data)
     {
         return (1);//all good
     }
-       
-
     if (checkIdentifier(str, &(data->NO), "NO"))
     {
       data->filled += 1;
@@ -277,6 +268,8 @@ int main(int argc, char **argv)
     }
     printf("AFTER--------------->\n");
     printInput(data);
+    ///here check map is valid
+    //start mlx
     freeData(&data);
     
     close(fd);
