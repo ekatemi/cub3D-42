@@ -70,5 +70,7 @@ void free_arr(char **arr);
 
 //* MAP HANDLING
 int mapIsValid(const t_data data);
+int normalizeMap(t_data *data);
+int trimEmptyLines(t_data *data);
 
 #endif

@@ -1,6 +1,7 @@
 #include "mlx_linux/mlx.h"
 #include "libft/libft.h"
 #include "cub_3d.h"
+#include <string.h> ///DELETE!!!!!!
 
 
 
@@ -30,23 +31,23 @@ char *trim_trailing_spaces(const char *str)
 //helper
 void printInput(t_data data)
 {
-    printf("PRINT DATA IN FILLED STRUCT\n");
-    printf("NO '%s'\n", data.NO);
-    printf("SO '%s'\n", data.SO);
-    printf("WE '%s'\n", data.WE);
-    printf("EA '%s'\n", data.EA);
-    printf("Filled %d \n", data.filled);
-    printf("Floor %d, %d, %d \n", data.F.r,data.F.g, data.F.b);
-    printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
+    // printf("PRINT DATA IN FILLED STRUCT\n");
+    // printf("NO '%s'\n", data.NO);
+    // printf("SO '%s'\n", data.SO);
+    // printf("WE '%s'\n", data.WE);
+    // printf("EA '%s'\n", data.EA);
+    // printf("Filled %d \n", data.filled);
+    // printf("Floor %d, %d, %d \n", data.F.r,data.F.g, data.F.b);
+    // printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
     
     printf("MAP---------->\n");
     //printf("%s\n", data.map[0]);
     //printf("%s\n", data.map[1]);
     for (int i = 0; i < data.idx; i++)
     {
-        printf("%s", data.map[i]);
+        printf("%s\n", data.map[i]);
     }
-    printf("\nIDX is %d \n", data.idx);
+    printf("IDX is %d \n", data.idx);
 }
 
 
@@ -152,19 +153,33 @@ int checkIdentifier(char *str, void *target, char *id) //id "NO", "SO", "WE", "E
 int storeRawMap(t_data *data, char *line)
 {
     size_t len;
+    char *trimmed_line;
 
-    if(!data || !line || !data->inside)
-        return(0);
-    len = ft_strlen(line);
+    if (!data || !line || !data->inside)
+        return (0);
+
+    trimmed_line = trim_trailing_spaces(line);
+    if (!trimmed_line)
+        return (0); // Memory allocation failed
+
+    len = strlen(trimmed_line);
     data->map[data->idx] = (char *)malloc(len + 1);
-    if(!data->map[data->idx])
-        return 0; //err
-    ft_strlcpy(data->map[data->idx], line, len + 1);
-    printf("Stored line: %s\n", data->map[data->idx]);
-    data->idx ++;
+    if (!data->map[data->idx])
+    {
+        free(trimmed_line);
+        return (0); // Allocation error
+    }
+
+    ft_strlcpy(data->map[data->idx], trimmed_line, len + 1);
+    free(trimmed_line); // Free temporary trimmed string
+
+    printf("Stored line %d: %s\n", data->idx, data->map[data->idx]);
+    data->idx++;
+
     if (!data->inside)
         data->inside = 1;
 
+    printf("Number of lines is %d\n", data->idx);
     return (1);
 }
 
@@ -179,7 +194,7 @@ int parseInput(char *str, t_data *data)
         str++;
 
     // If it is a beginning of a map put flag
-    if ((*str == '1' && data->filled == 6) )//maybe 1 || 0 if map can start from 0
+    if ((!ft_isspace(*str) && data->filled == 6) )
     {
         data->inside = 1;
     }
@@ -252,7 +267,7 @@ int main(int argc, char **argv)
     //printf("Result is %s\n", result);
     while (line)	
     {
-        if (is_empty_or_whitespace(line) && !data.inside) // Skip to the next line if parseInput returns 0
+        if (is_empty_or_whitespace(line) && data.inside == 0) // Skip to the next line if parseInput returns 0
         {
             free(line);
             line = get_next_line(fd);
@@ -267,6 +282,15 @@ int main(int argc, char **argv)
         line = get_next_line(fd);
     }
     printf("AFTER--------------->\n");
+    printInput(data);
+    if(!normalizeMap(&data))
+    {
+        printf("Map is not valid\n");
+        freeData(&data);
+        return 1;
+    }
+    //trimEmptyLines(&data);
+    printf("Map after modification------->\n");
     printInput(data);
     ///here check map is valid
     //start mlx

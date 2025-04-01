@@ -48,6 +48,8 @@ char	*get_next_line(int fd)
 	}
 	if ((bytes <= 0) && (index == 0))
 		return (free(buffer), NULL);
+	if(buffer[index-1] == '\n')
+		buffer[index - 1] = '\0';
 	buffer[index] = '\0';
 	return (buffer);
 }

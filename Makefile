@@ -3,7 +3,8 @@ CFLAGS = -Wall -Wextra -Werror
 LDFLAGS = -L./libft -lft 
 INCLUDES = -I./libft -I.
 
-SRC = main.c get_next_line.c helper_input.c helper_errors.c struct_init.c
+SRC = main.c get_next_line.c helper_input.c helper_errors.c struct_init.c \
+	handle_map.c
 OBJ = $(SRC:.c=.o)
 NAME = cub3D
 

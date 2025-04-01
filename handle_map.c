@@ -7,8 +7,12 @@ int validChar(char *line, int *pos)
         return 0;
     while (*line)
     {
-        if (*line != '1' && *line != '0' && *line != 'N' && *line != 'S' && *line != 'W' && *line != 'E' && *line != ' ')
+        if (*line != '1' && *line != '0' && *line != 'N' && *line != 'S' && *line != 'W' && *line != 'E' && !ft_isspace(*line))
+        {
+            printf("Wrong char %c\n", *line);
             return (0);
+        }
+            
         if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
             (*pos)++;
         line++;
@@ -43,11 +47,20 @@ int mapIsValid(const t_data data)
     while (i < data.idx)
     {
         if (is_empty_or_whitespace(data.map[i]))
+        {
+            printf("Error empty line inside a map\n");
             return 0;
+        }
+            
         if (!validChar(data.map[i], &pos))
+        {
+            printf("Error not allowed characters\n");
             return 0;
+        }
         i++;
     }
+    if(pos > 1 || pos < 1)
+        printf("Error position is not correct\n");
     return (pos == 1);
 }
 
@@ -55,19 +68,18 @@ int mapIsValid(const t_data data)
 int copyStr(char *dst, char *src)
 {
     int i = 0;
-    while (src[i])
-    {
-        if (!ft_isspace(src[i]))
-        {
+
+    while(src[i] && dst[i])
+    {   
+        if(!ft_isspace(src[i]))
             dst[i] = src[i];
-            i++;
-        }
-        else
-        {
-            i++;
-        }
+        i++;
     }
-    dst[i] = '\0';
+    // while(dst[i])
+    // {
+    //     dst[i] = '0';
+    //     i++;
+    // }
     return 1;
 }
 
@@ -79,29 +91,32 @@ int normalizeMap(t_data *data)
     // trim empty lines at the end
     if (!trimEmptyLines(data))
         return 0;
-    // check if the chars are valid
     if (!mapIsValid(*data))
-        return 0;
+        return 0; 
     int i = 0;
     // find max len of row
-    int max_len = 0;
+    size_t max_len = 0;
     while (i < data->idx)
     {
-        if (ft_strlen(data->map[i]) > max_len)
+        size_t row_len = ft_strlen(data->map[i]);
+        if (row_len > max_len)
             max_len = ft_strlen(data->map[i]);
         i++;
     }
+    printf("The max len raw is %zu\n", max_len);
 
     i = 0;
     while (i < data->idx)
     {
         char *tmp = (char *)malloc(max_len + 1);
         ft_memset(tmp, '0', max_len); // init with '0'
+        printf("Tmp is %s\n", tmp);
         if (!copyStr(tmp, data->map[i]))
             return 0;
         free(data->map[i]);
         data->map[i] = tmp;
         i++;
     }
+
     return 1;
 }
