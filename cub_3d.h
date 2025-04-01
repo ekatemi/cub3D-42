@@ -34,6 +34,11 @@ typedef struct s_location{
     int b;
 } t_location;
 
+typedef struct s_point{
+    int x;
+    int y;
+} t_point;
+
 typedef struct s_data {
     char *NO;  // ./path_to_the_north_texture
     char *SO;
@@ -49,6 +54,9 @@ typedef struct s_data {
     int idx;
 
     char **map;
+
+    char d;
+    t_point pos;
 } t_data;
 
 

@@ -38,7 +38,11 @@ void inputDataInit(t_data *data)
     {
         data->map[i] = NULL;
         i++;
-    }  
+    }
+
+    data->d = 'A';
+    data->pos.x = 0;
+    data->pos.y = 0;
 }
 
 void freeData(t_data *data)

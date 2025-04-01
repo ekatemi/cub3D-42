@@ -83,6 +83,33 @@ int copyStr(char *dst, char *src)
     return 1;
 }
 
+
+void findPos(t_data *data)
+{
+    int i;
+    int j;
+    if (!data || !data->map || data->idx <= 0)
+        return ;
+    
+    i = 0;
+    while (i < data->idx)
+    {
+        j = 0;
+        while(data->map[i][j])
+        {
+            if(data->map[i][j] == 'S' || data->map[i][j] == 'N' 
+                || data->map[i][j] == 'W' || data->map[i][j] == 'E')
+            {
+                data->d = data->map[i][j];
+                data->pos.x = j;
+                data->pos.y = i;
+            }
+           j++;    
+        }
+        i++;
+    }
+}
+
 // should make all rows equal max len + \0 and replace all space characters with '0'
 int normalizeMap(t_data *data)
 {
@@ -117,6 +144,6 @@ int normalizeMap(t_data *data)
         data->map[i] = tmp;
         i++;
     }
-
+    findPos(data);
     return 1;
 }

@@ -283,15 +283,19 @@ int main(int argc, char **argv)
     }
     printf("AFTER--------------->\n");
     printInput(data);
+    
     if(!normalizeMap(&data))
     {
         printf("Map is not valid\n");
         freeData(&data);
         return 1;
     }
+    
     //trimEmptyLines(&data);
     printf("Map after modification------->\n");
     printInput(data);
+
+    printf("Direction is %c, coord xy %d,%d\n", data.d, data.pos.x, data.pos.y);
     ///here check map is valid
     //start mlx
     freeData(&data);
