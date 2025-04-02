@@ -43,11 +43,11 @@ void printInput(t_data data)
     printf("MAP---------->\n");
     //printf("%s\n", data.map[0]);
     //printf("%s\n", data.map[1]);
-    for (int i = 0; i < data.idx; i++)
+    for (int i = 0; i < data.rows; i++)
     {
         printf("%s\n", data.map[i]);
     }
-    printf("IDX is %d \n", data.idx);
+    printf("rows is %d \n", data.rows);
 }
 
 
@@ -163,23 +163,23 @@ int storeRawMap(t_data *data, char *line)
         return (0); // Memory allocation failed
 
     len = strlen(trimmed_line);
-    data->map[data->idx] = (char *)malloc(len + 1);
-    if (!data->map[data->idx])
+    data->map[data->rows] = (char *)malloc(len + 1);
+    if (!data->map[data->rows])
     {
         free(trimmed_line);
         return (0); // Allocation error
     }
 
-    ft_strlcpy(data->map[data->idx], trimmed_line, len + 1);
+    ft_strlcpy(data->map[data->rows], trimmed_line, len + 1);
     free(trimmed_line); // Free temporary trimmed string
 
-    printf("Stored line %d: %s\n", data->idx, data->map[data->idx]);
-    data->idx++;
+    printf("Stored line %d: %s\n", data->rows, data->map[data->rows]);
+    data->rows++;
 
     if (!data->inside)
         data->inside = 1;
 
-    printf("Number of lines is %d\n", data->idx);
+    printf("Number of lines is %d\n", data->rows);
     return (1);
 }
 
@@ -303,3 +303,4 @@ int main(int argc, char **argv)
     close(fd);
     return (0);
 }
+

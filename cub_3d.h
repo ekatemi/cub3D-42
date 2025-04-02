@@ -51,7 +51,7 @@ typedef struct s_data {
     int filled; // 6 filled all data exept map, map goes last
     
     int inside;
-    int idx;
+    int rows;
 
     char **map;
 

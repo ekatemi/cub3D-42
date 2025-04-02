@@ -23,14 +23,14 @@ int validChar(char *line, int *pos)
 // trim empty lines at the end
 int trimEmptyLines(t_data *data)
 {
-    if (!data || !data->map || data->idx <= 0)
+    if (!data || !data->map || data->rows <= 0)
         return 0;
 
-    while (data->idx > 0 && is_empty_or_whitespace(data->map[data->idx - 1]))
+    while (data->rows > 0 && is_empty_or_whitespace(data->map[data->rows - 1]))
     {
-        free(data->map[data->idx - 1]);
-        data->map[data->idx - 1] = NULL;
-        data->idx--;
+        free(data->map[data->rows - 1]);
+        data->map[data->rows - 1] = NULL;
+        data->rows--;
     }
     return 1;
 }
@@ -42,9 +42,9 @@ int mapIsValid(const t_data data)
 
     i = 0;
     int pos = 0;
-    if (data.idx < 3)
+    if (data.rows < 3)
         return 0;
-    while (i < data.idx)
+    while (i < data.rows)
     {
         if (is_empty_or_whitespace(data.map[i]))
         {
@@ -84,15 +84,17 @@ int copyStr(char *dst, char *src)
 }
 
 
+
+
 void findPos(t_data *data)
 {
     int i;
     int j;
-    if (!data || !data->map || data->idx <= 0)
+    if (!data || !data->map || data->rows <= 0)
         return ;
     
     i = 0;
-    while (i < data->idx)
+    while (i < data->rows)
     {
         j = 0;
         while(data->map[i][j])
@@ -113,7 +115,7 @@ void findPos(t_data *data)
 // should make all rows equal max len + \0 and replace all space characters with '0'
 int normalizeMap(t_data *data)
 {
-    if (!data || !data->map || data->idx <= 0)
+    if (!data || !data->map || data->rows <= 0)
         return 0;
     // trim empty lines at the end
     if (!trimEmptyLines(data))
@@ -123,7 +125,7 @@ int normalizeMap(t_data *data)
     int i = 0;
     // find max len of row
     size_t max_len = 0;
-    while (i < data->idx)
+    while (i < data->rows)
     {
         size_t row_len = ft_strlen(data->map[i]);
         if (row_len > max_len)
@@ -133,7 +135,7 @@ int normalizeMap(t_data *data)
     printf("The max len raw is %zu\n", max_len);
 
     i = 0;
-    while (i < data->idx)
+    while (i < data->rows)
     {
         char *tmp = (char *)malloc(max_len + 1);
         ft_memset(tmp, '0', max_len); // init with '0'

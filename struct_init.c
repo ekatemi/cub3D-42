@@ -22,7 +22,7 @@ void inputDataInit(t_data *data)
     data->C.b = -1;
 
     data->filled = 0;
-    data->idx = 0;
+    data->rows = 0;
     data->inside = 0;
 
 
