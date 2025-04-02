@@ -67,7 +67,8 @@ int mapIsValid(const t_data data)
 // I assume that srs is equal or shorter than dest because dest is
 int copyStr(char *dst, char *src)
 {
-    int i = 0;
+    int i;
+    i = 0;
 
     while(src[i] && dst[i])
     {   
@@ -117,6 +118,7 @@ int normalizeMap(t_data *data)
 {
     if (!data || !data->map || data->rows <= 0)
         return 0;
+    char *tmp;
     // trim empty lines at the end
     if (!trimEmptyLines(data))
         return 0;
@@ -137,7 +139,7 @@ int normalizeMap(t_data *data)
     i = 0;
     while (i < data->rows)
     {
-        char *tmp = (char *)malloc(max_len + 1);
+        tmp = (char *)malloc(max_len + 1);
         ft_memset(tmp, '0', max_len); // init with '0'
         printf("Tmp is %s\n", tmp);
         if (!copyStr(tmp, data->map[i]))
