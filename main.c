@@ -262,7 +262,7 @@ int main(int argc, char **argv)
     t_data data;
 
     inputDataInit(&data);
-    printInput(data); //just to check
+    //printInput(data); //just to check
 
     char *file = getFilename(argc, argv);
     if (!file)
@@ -301,7 +301,7 @@ int main(int argc, char **argv)
         line = get_next_line(fd);
     }
     printf("AFTER--------------->\n");
-    printInput(data);
+    //printInput(data);
     
     if(!normalizeMap(&data))
     {
@@ -312,7 +312,7 @@ int main(int argc, char **argv)
     
     //trimEmptyLines(&data);
     printf("Map after modification------->\n");
-    printInput(data);
+    //printInput(data);
 
     printf("Direction is %c, coord xy %d,%d\n", data.d, data.pos.x, data.pos.y);
     ///here check map is valid

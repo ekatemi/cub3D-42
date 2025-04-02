@@ -140,6 +140,8 @@ int	normalizeMap(t_data *data)
 	if (!data || !data->map || data->rows <= 0)
 		return (0);
 	char *tmp;
+
+	tmp = NULL;
     // trim empty lines at the end
 	if (!trimEmptyLines(data))
 		return (0);
@@ -153,14 +155,16 @@ int	normalizeMap(t_data *data)
 			max_len = ft_strlen(data->map[i]);
 		i++;
 	}
-	printf("The max len raw is %zu\n", max_len);
+	//printf("The max len raw is %zu\n", max_len);
 
 	i = 0;
 	while (i < data->rows)
 	{
 		tmp = (char *)malloc(max_len + 1);
+		if(!tmp)
+			return (0);
 		ft_memset(tmp, '0', max_len); // init with '0'
-		printf("Tmp is %s\n", tmp);
+		//printf("Tmp is %s\n", tmp);
 		if (!copyStr(tmp, data->map[i]))
 			return (0);
 		free(data->map[i]);
