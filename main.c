@@ -252,7 +252,11 @@ int main(int argc, char **argv)
 
     char *file = getFilename(argc, argv);
     if (!file)
+    {
+        freeData(&data);
         return (1);
+    }
+        
         
     int     fd;
     char    *line;
@@ -260,6 +264,7 @@ int main(int argc, char **argv)
     fd = errOpen(file);
     if (fd == -1)
     {
+       freeData(&data);
        return (1); 
     }
     
