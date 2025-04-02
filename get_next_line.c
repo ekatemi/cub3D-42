@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: emikhayl <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/02 19:36:19 by emikhayl          #+#    #+#             */
+/*   Updated: 2025/04/02 19:43:38 by emikhayl         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub_3d.h"
 #include "./libft/libft.h"
-
 
 char	*grow_buffer(char *buffer, size_t new_size, int index)
 {
@@ -48,7 +59,7 @@ char	*get_next_line(int fd)
 	}
 	if ((bytes <= 0) && (index == 0))
 		return (free(buffer), NULL);
-	if(buffer[index-1] == '\n')
+	if (buffer[index-1] == '\n')
 		buffer[index - 1] = '\0';
 	buffer[index] = '\0';
 	return (buffer);
