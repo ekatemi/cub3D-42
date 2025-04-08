@@ -12,8 +12,7 @@
 
 #include "mlx_linux/mlx.h"
 #include "libft/libft.h"
-#include "cub_3d.h"
-#include <string.h> ///DELETE!!!!!!
+#include "parser.h"
 
 //free 2D array
 char	**free_matrix(char **arr_of_words, int col)
@@ -43,25 +42,25 @@ char	*trim_trailing_spaces(const char *str)
 //helper
 void print_input(t_data data)
 {
-    // printf("PRINT DATA IN FILLED STRUCT\n");
-    // printf("NO '%s'\n", data.NO);
-    // printf("SO '%s'\n", data.SO);
-    // printf("WE '%s'\n", data.WE);
-    // printf("EA '%s'\n", data.EA);
-    // printf("Filled %d \n", data.filled);
-    // printf("Floor %d, %d, %d \n", data.F.r,data.F.g, data.F.b);
-    // printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
+    printf("PRINT DATA IN FILLED STRUCT\n");
+    printf("NO '%s'\n", data.NO);
+    printf("SO '%s'\n", data.SO);
+    printf("WE '%s'\n", data.WE);
+    printf("EA '%s'\n", data.EA);
+    printf("Filled %d \n", data.filled);
+    printf("Floor %d, %d, %d \n", data.F.r,data.F.g, data.F.b);
+    printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
     
     printf("MAP---------->\n");
     for (size_t i = 0; i < data.rows; i++)
     {
         printf("%s\n", data.map[i]);
     }
-    printf("rows is %zu, cols is %zu, pos is [%d][%d] \n", data.rows, data.cols, data.me.pos.x, data.me.pos.y);
+    printf("rows is %zu, cols is %zu, pos is [%d][%d], direction is %c \n", data.rows, data.cols, data.me.pos.x, data.me.pos.y, data.me.dir);
 }
 
 //parse string like this "255,0,4" andd assign to F or C
-int	fill_color(t_location *l, char *str, char id)
+int	fill_color(t_color *l, char *str, char id)
 {
 	int		i;
 	char	**arr;
@@ -149,8 +148,8 @@ int	check_identifier(char *str, void *target, char *id)
 		// Handle color identifiers (C, F)
 		else
 		{
-			t_location *color_target;
-			color_target = (t_location *)target; // Cast the target to t_location pointer
+			t_color *color_target;
+			color_target = (t_color *)target; // Cast the target to t_location pointer
 			// Now you can access the fields of the t_location structure
 			if (!fill_color(color_target, str, *id))
 			{
@@ -175,7 +174,7 @@ int	store_raw_map(t_data *data, char *line)
 	if (!trimmed_line)
 		return (0); // Memory allocation failed
 
-	len = strlen(trimmed_line);
+	len = ft_strlen(trimmed_line);
 	data->map[data->rows] = (char *)malloc(len + 1);
 	if (!data->map[data->rows])
 	{
@@ -251,21 +250,21 @@ int	parse_input(char *str, t_data *data)
 	return (0);
 }
 
+
+
 int main(int argc, char **argv)
 {
     t_data data;
-
     input_data_init(&data);
-    //print_input(data); //just to check
-
-    char *file = get_filename(argc, argv);
+    
+	
+	
+	char *file = get_filename(argc, argv);
     if (!file)
     {
         free_data(&data);
         return (1);
-    }
-        
-        
+    }  
     int     fd;
     char    *line;
     
@@ -275,9 +274,7 @@ int main(int argc, char **argv)
        free_data(&data);
        return (1); 
     }
-    
     line = get_next_line(fd); //if result is empty line skip to next
-    //printf("Result is %s\n", result);
     while (line)	
     {
         if (is_empty_or_whitespace(line) && data.inside == 0) // Skip to the next line if parse_input returns 0
@@ -293,35 +290,21 @@ int main(int argc, char **argv)
         }
         free(line);
         line = get_next_line(fd);
-    }
-    printf("AFTER--------------->\n");
-    //print_input(data);
-    
+    }  
     if(!normalize_map(&data))
     {
         printf("Map is not valid\n");
         free_data(&data);
         return 1;
-    }
-    
-    //trimEmptyLines(&data);
-    printf("Map after modification------->\n");
-    print_input(data);
-    
-    if (is_map_closed(&data)) //area size begin
-        printf("\nThe map is closed\n");
-    else
-    {
+    } 
+    if (!is_map_closed(&data)) //area size begin
+	{
         printf("\nThe map is open\n");
         free_data(&data);
         return 1;
     }
-        
-    
-    ///here check map is valid
-    //start mlx
+    print_input(data);
     free_data(&data);
-    
     close(fd);
     return (0);
 }

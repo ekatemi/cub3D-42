@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub_3d.h"
+#include "parser.h"
 #include "./libft/libft.h"
 
 char	*grow_buffer(char *buffer, size_t new_size, int index)

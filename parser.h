@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB_3D_H
-# define CUB_3D_H
+#ifndef PARSER_H
+# define PARSER_H
 
 # include <stdlib.h>
 # include <unistd.h>
@@ -28,11 +28,11 @@
 # endif
 
 //** STRUCTS */
-typedef struct s_location{
+typedef struct s_color{
     int r;
     int g;
     int b;
-} t_location;
+} t_color;
 
 typedef struct s_point{
     int x;
@@ -50,8 +50,8 @@ typedef struct s_data {
     char *WE;
     char *EA;
 
-    t_location F;
-    t_location C;
+    t_color F;
+    t_color C;
 
     int filled; // 6 filled all data exept map, map goes last
     

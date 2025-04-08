@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft/libft.h"
-#include "cub_3d.h"
+#include "parser.h"
 
 static int	valid_char(char *line, int *pos)
 {
@@ -89,6 +89,7 @@ static int	copy_str(char *dst, char *src)
 	return (1);
 }
 
+
 static void	find_pos(t_data *data)
 {
 	size_t	i;
@@ -108,6 +109,7 @@ static void	find_pos(t_data *data)
 				data->me.dir = data->map[i][j];
 				data->me.pos.x = j;
 				data->me.pos.y = i;
+				data->map[i][j] = '0';
 			}
 			j++;
 		}

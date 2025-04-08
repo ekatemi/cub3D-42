@@ -16,7 +16,7 @@ libs:
 $(NAME): $(OBJ) ./libft/libft.a
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(NAME)
 
-%.o: %.c Makefile cub_3d.h
+%.o: %.c Makefile parser.h
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:

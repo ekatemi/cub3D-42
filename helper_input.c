@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft/libft.h"
-#include "cub_3d.h"
+#include "parser.h"
 #include <string.h>
 
 void	free_arr(char **arr)

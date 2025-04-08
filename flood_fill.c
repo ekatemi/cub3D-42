@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub_3d.h"
+#include "parser.h"
 #include <string.h>
 
 void	free_area(char **area, int rows)

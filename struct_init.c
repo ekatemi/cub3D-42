@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub_3d.h"
+#include "parser.h"
 
 static void	init_texture_and_colors(t_data *data)
 {
@@ -42,7 +42,7 @@ static void	init_map_and_player(t_data *data)
 		data->map[i] = NULL;
 		i++;
 	}
-	data->me.dir = 'A';
+	data->me.dir = ' ';
 	data->me.pos.x = 0;
 	data->me.pos.y = 0;
 }
