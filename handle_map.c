@@ -16,16 +16,16 @@
 static int	valid_char(char *line, int *pos)
 {
 	if (!line)
-        	return 0;
-    	while (*line)
+		return (0);
+	while (*line)
 	{
-		if (*line != '1' && *line != '0' && *line != 'N' && *line != 'S'
-				&& *line != 'W' && *line != 'E' && !ft_isspace(*line))
+		if (*line != '1' && *line != '0' && *line != 'N'
+			&& *line != 'S' && *line != 'W' && *line != 'E'
+			&& !ft_isspace(*line))
 		{
 			printf("Wrong char %c\n", *line);
 			return (0);
 		}
-            
 		if (*line == 'N' || *line == 'S' || *line == 'W' || *line == 'E')
 			(*pos)++;
 		line++;
@@ -33,14 +33,13 @@ static int	valid_char(char *line, int *pos)
 	return (1);
 }
 
-// trim empty lines at the end
 int	trim_empty_lines(t_data *data)
 {
 	if (!data || !data->map || data->rows <= 0)
 		return (0);
-	while (data->rows > 0 && is_empty_or_whitespace(data->map[data->rows - 1]))
+	while (data->rows > 0
+		&& is_empty_or_whitespace(data->map[data->rows - 1]))
 	{
-		
 		free(data->map[data->rows - 1]);
 		data->map[data->rows - 1] = NULL;
 		data->rows--;
@@ -48,13 +47,13 @@ int	trim_empty_lines(t_data *data)
 	return (1);
 }
 
-// check trimmed map
 int	map_is_valid(const t_data data)
 {
-	size_t i;
-	
+	size_t	i;
+	int		pos;
+
 	i = 0;
-	int pos = 0;
+	pos = 0;
 	if (data.rows < 3)
 		return (0);
 	while (i < data.rows)
@@ -71,35 +70,29 @@ int	map_is_valid(const t_data data)
 		}
 		i++;
 	}
-	if(pos > 1 || pos < 1)
+	if (pos > 1 || pos < 1)
 		printf("Error position is not correct\n");
 	return (pos == 1);
 }
 
-// I assume that srs is equal or shorter than dest because dest is
 static int	copy_str(char *dst, char *src)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(src[i] && dst[i])
+	while (src[i] && dst[i])
 	{
-		if(!ft_isspace(src[i]))
+		if (!ft_isspace(src[i]))
 			dst[i] = src[i];
 		i++;
 	}
-    // while(dst[i])
-    // {
-    //     dst[i] = '0';
-    //     i++;
-    // }
 	return (1);
 }
 
 static void	find_pos(t_data *data)
 {
-	size_t i;
-	size_t j;
+	size_t	i;
+	size_t	j;
 
 	if (!data || !data->map || data->rows <= 0)
 		return ;
@@ -107,9 +100,9 @@ static void	find_pos(t_data *data)
 	while (i < data->rows)
 	{
 		j = 0;
-		while(data->map[i][j])
+		while (data->map[i][j])
 		{
-			if(data->map[i][j] == 'S' || data->map[i][j] == 'N' 
+			if (data->map[i][j] == 'S' || data->map[i][j] == 'N'
 				|| data->map[i][j] == 'W' || data->map[i][j] == 'E')
 			{
 				data->me.dir = data->map[i][j];
@@ -122,60 +115,54 @@ static void	find_pos(t_data *data)
 	}
 }
 
-int set_cols_len(t_data *data)
+int	set_cols_len(t_data *data)
 {
-    size_t i;
-    size_t len;
-    size_t max_len;
+	size_t	i;
+	size_t	len;
+	size_t	max_len;
 
-    i = 0;
-    len = 0;
-    max_len = 0;
-    if(!data || !data->map)
-        return 0;
-    while (i < data->rows)
+	i = 0;
+	len = 0;
+	max_len = 0;
+	if (!data || !data->map)
+		return (0);
+	while (i < data->rows)
 	{
 		len = ft_strlen(data->map[i]);
 		if (len > max_len)
 			max_len = len;
 		i++;
 	}
-    data->cols = max_len;
-    return (1);
+	data->cols = max_len;
+	return (1);
 }
 
-// should make all rows equal max len + \0 and replace all space characters with '0'
 int	normalize_map(t_data *data)
 {
-	size_t i;
-    char *tmp;
-	
-    i = 0;
-    tmp = NULL;
+	size_t	i;
+	char	*tmp;
 
+	i = 0;
+	tmp = NULL;
 	if (!data || !data->map)
 		return (0);
-
-    // trim empty lines at the end
 	if (!trim_empty_lines(data))
 		return (0);
 	if (!map_is_valid(*data))
-		return (0); 
-    set_cols_len(data);
+		return (0);
+	set_cols_len(data);
 	while (i < data->rows)
 	{
 		tmp = (char *)malloc(data->cols + 1);
-		if(!tmp)
+		if (!tmp)
 			return (0);
-		ft_memset(tmp, '0', data->cols); // init with '0'
-        tmp[data->cols] = '\0';
-		//printf("Tmp is %s\n", tmp);
+		ft_memset(tmp, '0', data->cols);
+		tmp[data->cols] = '\0';
 		if (!copy_str(tmp, data->map[i]))
-        {
-            free(tmp);
-            return (0);
-        }
-			
+		{
+			free(tmp);
+			return (0);
+		}
 		free(data->map[i]);
 		data->map[i] = tmp;
 		i++;
@@ -183,5 +170,3 @@ int	normalize_map(t_data *data)
 	find_pos(data);
 	return (1);
 }
-
-
