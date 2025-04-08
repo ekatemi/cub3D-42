@@ -39,6 +39,11 @@ typedef struct s_point{
     int y;
 } t_point;
 
+typedef struct s_player{
+    char dir;
+    t_point pos;
+} t_player;
+
 typedef struct s_data {
     char *NO;  // ./path_to_the_north_texture
     char *SO;
@@ -50,13 +55,14 @@ typedef struct s_data {
 
     int filled; // 6 filled all data exept map, map goes last
     
-    int inside;
-    int rows;
+    int inside; //flag for map checking
+
+    size_t rows; //number of rows
+    size_t cols; //str len
 
     char **map;
 
-    char d;
-    t_point pos;
+    t_player me;
 } t_data;
 
 
@@ -73,12 +79,13 @@ char	**ft_split_global(const char *s, char c);
 
 //** STRUCT INIT */
 void inputDataInit(t_data *data);
-void freeData(t_data *data);
+void free_data(t_data *data);
 void free_arr(char **arr);
 
 //* MAP HANDLING
-int mapIsValid(const t_data data);
-int normalizeMap(t_data *data);
-int trimEmptyLines(t_data *data);
+int map_is_valid(const t_data data);
+int normalize_map(t_data *data);
+int trim_empty_lines(t_data *data);
+int is_map_closed(t_data *data);
 
 #endif

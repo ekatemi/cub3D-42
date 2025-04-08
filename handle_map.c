@@ -13,7 +13,7 @@
 #include "libft/libft.h"
 #include "cub_3d.h"
 
-int	validChar(char *line, int *pos)
+static int	valid_char(char *line, int *pos)
 {
 	if (!line)
         	return 0;
@@ -34,7 +34,7 @@ int	validChar(char *line, int *pos)
 }
 
 // trim empty lines at the end
-int	trimEmptyLines(t_data *data)
+int	trim_empty_lines(t_data *data)
 {
 	if (!data || !data->map || data->rows <= 0)
 		return (0);
@@ -49,9 +49,9 @@ int	trimEmptyLines(t_data *data)
 }
 
 // check trimmed map
-int	mapIsValid(const t_data data)
+int	map_is_valid(const t_data data)
 {
-	int i;
+	size_t i;
 	
 	i = 0;
 	int pos = 0;
@@ -64,7 +64,7 @@ int	mapIsValid(const t_data data)
 			printf("Error empty line inside a map\n");
 			return (0);
 		}
-		if (!validChar(data.map[i], &pos))
+		if (!valid_char(data.map[i], &pos))
 		{
 			printf("Error not allowed characters\n");
 			return (0);
@@ -77,7 +77,7 @@ int	mapIsValid(const t_data data)
 }
 
 // I assume that srs is equal or shorter than dest because dest is
-int	copyStr(char *dst, char *src)
+static int	copy_str(char *dst, char *src)
 {
 	int i;
 
@@ -96,10 +96,10 @@ int	copyStr(char *dst, char *src)
 	return (1);
 }
 
-void	findPos(t_data *data)
+static void	find_pos(t_data *data)
 {
-	int i;
-	int j;
+	size_t i;
+	size_t j;
 
 	if (!data || !data->map || data->rows <= 0)
 		return ;
@@ -112,9 +112,9 @@ void	findPos(t_data *data)
 			if(data->map[i][j] == 'S' || data->map[i][j] == 'N' 
 				|| data->map[i][j] == 'W' || data->map[i][j] == 'E')
 			{
-				data->d = data->map[i][j];
-				data->pos.x = j;
-				data->pos.y = i;
+				data->me.dir = data->map[i][j];
+				data->me.pos.x = j;
+				data->me.pos.y = i;
 			}
 			j++;
 		}
@@ -122,56 +122,65 @@ void	findPos(t_data *data)
 	}
 }
 
-
-
-
-
-
-// should make all rows equal max len + \0 and replace all space characters with '0'
-int	normalizeMap(t_data *data)
+int set_cols_len(t_data *data)
 {
-	int i;
-	size_t max_len;
-	size_t row_len;
+    size_t i;
+    size_t len;
+    size_t max_len;
 
-	i = 0;
-	max_len = 0;
-	row_len = 0;
-	if (!data || !data->map || data->rows <= 0)
-		return (0);
-	char *tmp;
-
-	tmp = NULL;
-    // trim empty lines at the end
-	if (!trimEmptyLines(data))
-		return (0);
-	if (!mapIsValid(*data))
-		return (0); 
-    // find max len of row
-	while (i < data->rows)
+    i = 0;
+    len = 0;
+    max_len = 0;
+    if(!data || !data->map)
+        return 0;
+    while (i < data->rows)
 	{
-		row_len = ft_strlen(data->map[i]);
-		if (row_len > max_len)
-			max_len = ft_strlen(data->map[i]);
+		len = ft_strlen(data->map[i]);
+		if (len > max_len)
+			max_len = len;
 		i++;
 	}
-	//printf("The max len raw is %zu\n", max_len);
+    data->cols = max_len;
+    return (1);
+}
 
-	i = 0;
+// should make all rows equal max len + \0 and replace all space characters with '0'
+int	normalize_map(t_data *data)
+{
+	size_t i;
+    char *tmp;
+	
+    i = 0;
+    tmp = NULL;
+
+	if (!data || !data->map)
+		return (0);
+
+    // trim empty lines at the end
+	if (!trim_empty_lines(data))
+		return (0);
+	if (!map_is_valid(*data))
+		return (0); 
+    set_cols_len(data);
 	while (i < data->rows)
 	{
-		tmp = (char *)malloc(max_len + 1);
+		tmp = (char *)malloc(data->cols + 1);
 		if(!tmp)
 			return (0);
-		ft_memset(tmp, '0', max_len); // init with '0'
+		ft_memset(tmp, '0', data->cols); // init with '0'
+        tmp[data->cols] = '\0';
 		//printf("Tmp is %s\n", tmp);
-		if (!copyStr(tmp, data->map[i]))
-			return (0);
+		if (!copy_str(tmp, data->map[i]))
+        {
+            free(tmp);
+            return (0);
+        }
+			
 		free(data->map[i]);
 		data->map[i] = tmp;
 		i++;
 	}
-	findPos(data);
+	find_pos(data);
 	return (1);
 }
 

@@ -37,6 +37,7 @@ void inputDataInit(t_data *data)
 
     data->filled = 0;
     data->rows = 0;
+    data->cols = 0;
     data->inside = 0;
 
 
@@ -53,13 +54,12 @@ void inputDataInit(t_data *data)
         data->map[i] = NULL;
         i++;
     }
-
-    data->d = 'A';
-    data->pos.x = 0;
-    data->pos.y = 0;
+    data->me.dir = 'A';
+    data->me.pos.x = 0;
+    data->me.pos.y = 0;
 }
 
-void freeData(t_data *data)
+void free_data(t_data *data)
 {
     int i;
 

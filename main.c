@@ -55,13 +55,11 @@ void printInput(t_data data)
     // printf("Ceiling %d, %d, %d \n", data.C.r,data.C.g, data.C.b);
     
     printf("MAP---------->\n");
-    //printf("%s\n", data.map[0]);
-    //printf("%s\n", data.map[1]);
-    for (int i = 0; i < data.rows; i++)
+    for (size_t i = 0; i < data.rows; i++)
     {
         printf("%s\n", data.map[i]);
     }
-    printf("rows is %d \n", data.rows);
+    printf("rows is %zu, cols is %zu, pos is [%d][%d] \n", data.rows, data.cols, data.me.pos.x, data.me.pos.y);
 }
 
 
@@ -187,13 +185,10 @@ int storeRawMap(t_data *data, char *line)
     ft_strlcpy(data->map[data->rows], trimmed_line, len + 1);
     free(trimmed_line); // Free temporary trimmed string
 
-    printf("Stored line %d: %s\n", data->rows, data->map[data->rows]);
     data->rows++;
 
     if (!data->inside)
         data->inside = 1;
-
-    printf("Number of lines is %d\n", data->rows);
     return (1);
 }
 
@@ -249,10 +244,10 @@ int parseInput(char *str, t_data *data)
     }  
     else
     {
-        freeData(data);
+        free_data(data);
         return(0);
     }
-    freeData(data);
+    free_data(data);
     printf("Error: Unrecognized input: [%s]\n", str);
     return (0);
 }
@@ -267,7 +262,7 @@ int main(int argc, char **argv)
     char *file = getFilename(argc, argv);
     if (!file)
     {
-        freeData(&data);
+        free_data(&data);
         return (1);
     }
         
@@ -278,7 +273,7 @@ int main(int argc, char **argv)
     fd = errOpen(file);
     if (fd == -1)
     {
-       freeData(&data);
+       free_data(&data);
        return (1); 
     }
     
@@ -303,21 +298,30 @@ int main(int argc, char **argv)
     printf("AFTER--------------->\n");
     //printInput(data);
     
-    if(!normalizeMap(&data))
+    if(!normalize_map(&data))
     {
         printf("Map is not valid\n");
-        freeData(&data);
+        free_data(&data);
         return 1;
     }
     
     //trimEmptyLines(&data);
     printf("Map after modification------->\n");
-    //printInput(data);
-
-    printf("Direction is %c, coord xy %d,%d\n", data.d, data.pos.x, data.pos.y);
+    printInput(data);
+    
+    if (is_map_closed(&data)) //area size begin
+        printf("\nThe map is closed\n");
+    else
+    {
+        printf("\nThe map is open\n");
+        free_data(&data);
+        return 1;
+    }
+        
+    
     ///here check map is valid
     //start mlx
-    freeData(&data);
+    free_data(&data);
     
     close(fd);
     return (0);

@@ -1,58 +1,99 @@
-#include <stdio.h>
+#include "cub_3d.h"
+#include <string.h>
 
-#define WALL '1'
-#define EMPTY '0'
+//Free allocated memory for the map
+void free_area(char **area, int rows)
+{
+    for (int i = 0; i < rows; i++)
+        free(area[i]);
+    free(area);
+}
 
-// Flood fill function (corrected)
-int flood_fill(char **map, int x, int y, int rows, int cols, int **visited) {
-    // If out of bounds, the map is open
-    if (x < 0 || y < 0 || x >= rows || y >= cols)
-        return 0;
+// Function to create a dynamic copy of the map
+char **make_area(t_data *data)
+{
+    char **area = (char **)malloc(data->rows * sizeof(char *));
+    if (!area)
+        return NULL;
 
-    // If we hit a wall or visited cell, stop
-    if (map[x][y] == WALL || visited[x][y])
+    for (int i = 0; i < (int)data->rows; i++)
+    {
+        area[i] = strdup(data->map[i]); // Copy the entire row as is
+        if (!area[i])
+        {
+            while (--i >= 0)
+                free(area[i]);
+            free(area);
+            return NULL;
+        }
+    }
+    return area;
+}
+
+// Modified flood-fill function to detect open maps
+// int fill(char **tab, t_point size, char target, int row, int col)
+int fill(t_data *data, int y, int x, char **map)
+{
+    if (y < 0 || x < 0 || y >= (int)data->rows || x >= (int)data->cols)
         return 1;
 
-    // Mark as visited
-    visited[x][y] = 1;
+    if (map[y][x] == 'F' || map[y][x] == '1')
+        return 0;
 
-    // Explore all directions
-    int up = flood_fill(map, x - 1, y, rows, cols, visited);
-    int down = flood_fill(map, x + 1, y, rows, cols, visited);
-    int left = flood_fill(map, x, y - 1, rows, cols, visited);
-    int right = flood_fill(map, x, y + 1, rows, cols, visited);
+    map[y][x] = 'F';
 
-    // If any direction leads outside, the map is open
-    return up && down && left && right;
+    int open = 0;
+    open |= fill(data, y - 1, x, map);
+    open |= fill(data, y + 1, x, map);
+    open |= fill(data, y, x - 1, map);
+    open |= fill(data, y, x + 1, map);
+
+    return open;
 }
 
-// Wrapper function
-int is_map_closed(char **map, int x, int y, int rows, int cols) {
-    // Create a visited array
-    int visited[rows][cols];
-    for (int i = 0; i < rows; i++)
-        for (int j = 0; j < cols; j++)
-            visited[i][j] = 0;
+// Function to check if the map is closed  area size begin
+int is_map_closed(t_data *data)
+{
+    char **copy = make_area(data);
+    if (!copy)
+        return 0;
 
-    return flood_fill(map, x, y, rows, cols, (int **)visited);
+    int y = data->me.pos.y;
+    int x = data->me.pos.x;
+
+    int is_open = fill(data, y, x, copy);
+
+    free_area(copy, data->rows);
+    return !is_open;
 }
 
-int main() {
-    char *map[] = {
-        "001111",
-        "000000",
-        "101101",
-        "100001",
-        "111111"
-    };
+// int main(void)
+// {
+//     t_point size = {8, 5};
+//     t_point begin = {1, 1}; // Start inside the open space
 
-    int rows = 5, cols = 6;
-    int start_x = 2, start_y = 2;
+//     char *zone[] = {
+//         "11111111",
+//         "10001001",
+//         "        ",
+//         "10010000",
+//         "10110001",
+//         "11100001",
+//     };
 
-    if (is_map_closed(map, start_x, start_y, rows, cols))
-        printf("✅ The map is closed!\n");
-    else
-        printf("❌ The map is NOT closed!\n");
+//     char **area = make_area(zone, size);
+//     if (!area)
+//     {
+//         printf("Memory allocation failed!\n");
+//         return 1;
+//     }
 
-    return 0;
-}
+//     if (is_map_closed(area, size, begin))
+//         printf("\nThe map is closed\n");
+//     else
+//         printf("\nThe map is open\n");
+
+//     free_area(area, size);
+
+//     return 0;
+// }
