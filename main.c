@@ -256,7 +256,7 @@ int main(int argc, char **argv)
 {
     t_data data;
 
-    inputDataInit(&data);
+    input_data_init(&data);
     //printInput(data); //just to check
 
     char *file = get_filename(argc, argv);

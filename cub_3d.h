@@ -78,7 +78,7 @@ int	ft_isspace(char c);
 char	**ft_split_global(const char *s, char c);
 
 //** STRUCT INIT */
-void inputDataInit(t_data *data);
+void input_data_init(t_data *data);
 void free_data(t_data *data);
 void free_arr(char **arr);
 
