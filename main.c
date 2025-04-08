@@ -259,7 +259,7 @@ int main(int argc, char **argv)
     inputDataInit(&data);
     //printInput(data); //just to check
 
-    char *file = getFilename(argc, argv);
+    char *file = get_filename(argc, argv);
     if (!file)
     {
         free_data(&data);
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
     int     fd;
     char    *line;
     
-    fd = errOpen(file);
+    fd = err_open(file);
     if (fd == -1)
     {
        free_data(&data);

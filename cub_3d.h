@@ -71,8 +71,8 @@ typedef struct s_data {
 char	*get_next_line(int fd);
 
 //** PARSING */
-char* getFilename(int arg, char **argv);
-int errOpen(char *file);
+char* get_filename(int arg, char **argv);
+int err_open(char *file);
 int is_empty_or_whitespace(char *str);
 int	ft_isspace(char c);
 char	**ft_split_global(const char *s, char c);
