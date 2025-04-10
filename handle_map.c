@@ -172,3 +172,20 @@ int	normalize_map(t_data *data)
 	find_pos(data);
 	return (1);
 }
+
+int map_ok(t_data *data)
+{
+	if(!data)
+		return (0);
+	if (!normalize_map(data))
+	{
+		printf("Map is not valid\n");
+		return (0);
+	}
+	if (!is_map_closed(data))
+	{
+		printf("\nThe map is open\n");
+		return (0);
+	}
+	return (1);
+}

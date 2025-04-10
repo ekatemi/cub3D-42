@@ -79,9 +79,10 @@ void input_data_init(t_data *data);
 void free_data(t_data *data);
 
 //* MAP HANDLING
-int map_is_valid(const t_data data);
+
 int normalize_map(t_data *data);
 int trim_empty_lines(t_data *data);
 int is_map_closed(t_data *data);
+int map_ok(t_data *data);
 
 #endif
