@@ -18,12 +18,8 @@ static void	init_texture_and_colors(t_data *data)
 	data->SO = NULL;
 	data->WE = NULL;
 	data->EA = NULL;
-	data->F.r = -1; // 0 to 255
-	data->F.g = -1;
-	data->F.b = -1;
-	data->C.r = -1;
-	data->C.g = -1;
-	data->C.b = -1;
+	data->ceiling = -2; // 0 to 255
+	data->floor = -2;
 }
 
 static void	init_map_and_player(t_data *data)

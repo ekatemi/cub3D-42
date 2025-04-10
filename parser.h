@@ -50,8 +50,8 @@ typedef struct s_data {
     char *WE;
     char *EA;
 
-    t_color F;
-    t_color C;
+    int floor;
+    int ceiling;
 
     int filled; // 6 filled all data exept map, map goes last
     
@@ -65,8 +65,6 @@ typedef struct s_data {
     t_player me;
 } t_data;
 
-
-
 //**FOR GET NEXT LINE */
 char	*get_next_line(int fd);
 
@@ -75,12 +73,10 @@ char* get_filename(int arg, char **argv);
 int err_open(char *file);
 int is_empty_or_whitespace(char *str);
 int	ft_isspace(char c);
-char	**ft_split_global(const char *s, char c);
 
 //** STRUCT INIT */
 void input_data_init(t_data *data);
 void free_data(t_data *data);
-void free_arr(char **arr);
 
 //* MAP HANDLING
 int map_is_valid(const t_data data);

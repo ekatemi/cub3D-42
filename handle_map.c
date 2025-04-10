@@ -47,7 +47,7 @@ int	trim_empty_lines(t_data *data)
 	return (1);
 }
 
-int	map_is_valid(const t_data data)
+int	map_chars_ok(const t_data data)
 {
 	size_t	i;
 	int		pos;
@@ -150,7 +150,7 @@ int	normalize_map(t_data *data)
 		return (0);
 	if (!trim_empty_lines(data))
 		return (0);
-	if (!map_is_valid(*data))
+	if (!map_chars_ok(*data))
 		return (0);
 	set_cols_len(data);
 	while (i < data->rows)

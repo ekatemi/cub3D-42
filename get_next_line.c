@@ -34,20 +34,20 @@ char	*grow_buffer(char *buffer, size_t new_size, int index)
 	return (new_buffer);
 }
 
-char	*get_next_line(int fd)
+static char	*read_line(int fd)
 {
-	int		index;
-	int		bytes;
 	char	*buffer;
 	char	character;
+	int		index;
+	int		bytes;
 	size_t	buffer_size;
 
-	if (fd < 0)
-		return (NULL);
 	index = 0;
-	bytes = read(fd, &character, 1);
 	buffer_size = 1024;
 	buffer = (char *)malloc(sizeof(char) * (buffer_size + 1));
+	if (!buffer)
+		return (NULL);
+	bytes = read(fd, &character, 1);
 	while (bytes > 0)
 	{
 		if (index >= (int)buffer_size)
@@ -59,8 +59,20 @@ char	*get_next_line(int fd)
 	}
 	if ((bytes <= 0) && (index == 0))
 		return (free(buffer), NULL);
-	if (buffer[index-1] == '\n')
-		buffer[index - 1] = '\0';
 	buffer[index] = '\0';
 	return (buffer);
+}
+
+char	*get_next_line(int fd)
+{
+	char	*line;
+
+	if (fd < 0)
+		return (NULL);
+	line = read_line(fd);
+	if (!line)
+		return (NULL);
+	if (line[ft_strlen(line) - 1] == '\n')
+		line[ft_strlen(line) - 1] = '\0';
+	return (line);
 }
